@@ -1,2 +1,36 @@
 # Fakedata
-A NodeJs application that helps developers build fake JSON data quickly and easily.
+A web application that helps developers build fake JSON data quickly and easily.
+
+ NPM Modules Used
+----
+* [NodeJS](https://nodejs.org/)
+* [ExpressJS](https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md)
+* [Jade](http://jade-lang.com/)
+* [MongoDB](https://www.mongodb.org/)
+* [Mongoose](http://mongoosejs.com/)
+* [ChanceJS](http://chancejs.com/)
+* [Nano-ID](https://github.com/rkivalin/nano-id)
+* [Q](https://github.com/kriskowal/q)
+
+ToDos
+----
+* Support composite objects for creating JSON
+* Add support to generate random image urls
+* Use Angular instead of Jade
+
+Installation
+----
+
+* Get the repository
+* Install dependencies using node
+* Install nodemon, seriously, save yourself the hassel.
+* Then do `nodemon`. You should see express working on its magic. 
+
+Documentation
+---
+Coming soon...
+
+License
+----
+
+MIT

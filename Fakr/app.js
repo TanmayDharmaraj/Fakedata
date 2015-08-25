@@ -1,7 +1,4 @@
-﻿/**
- * Module dependencies.
- */
-var express = require('express');
+﻿var express = require('express');
 var bodyParser = require('body-parser');
 var routes = require('./routes');
 var editRoute = require('./routes/edit');
@@ -32,15 +29,9 @@ app.use(bodyParser.json());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// development only
-/*if ('development' == app.get('env')) {
-    app.use(express.errorHandler());
-}*/
-
 router.get('/', routes.index);
 router.get('/edit', editRoute.edit);
 
-//Shortcut route
 router.param('id', function (req, res, next, id) {
     
     if (nanoId.verify(id)) {
