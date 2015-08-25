@@ -1,0 +1,40 @@
+﻿extends layout
+
+block content
+    .container
+        .row#banner
+            .starter-template
+                h1 Create Awesome { Fake: "Data" }
+                p.lead Free for all. #[span(style="font-family: 'Nothing You Could Do', cursive;") Always!]
+                a(class="btn btn-primary btn-outline" href="/edit") Edit Previous JSON
+        #workspace
+            .row
+                .col-sm-12.col-md-6.working-area#JsonInput.JsonKeyValues
+                    form.form-inline
+                        ul(data-bind="foreach: JsonKeyValue, visible: JsonKeyValue().length > 0" class="list-unstyled")
+                            li
+                                .form-group
+                                    label.sr-only Json key
+                                    input(type="text" data-bind="value: Key" class="form-control" placeholder="Key")
+                                .form-group
+                                    label.sr-only Data Type
+                                    select(class="form-control" data-bind="options: $root.availableDataType, value: DataType, optionsText: 'DataType'")
+                                .form-group
+                                    button(type="button" class="btn btn-danger btn" data-bind="click: $root.DeleteJsonKeyValue") Remove
+                    button(type="button" class="btn btn-default btn-outline" data-bind="click: AddJsonKeyValue") Add
+                .col-sm-12.col-md-6.working-area#JsonOutput
+                    pre.prettyprint
+            .row.margin-top-05.center-block
+                .col-sm-12.text-center
+                    form.form-inline
+                        .form-group
+                            input(type="text" id="Reps" class="form-control" placeholder="Repetitions? (Default 1)")
+                            button(type="button" class="btn btn-default btn-outline" data-bind="click:GeneratePreview") Preview
+                            button(type="button" class="btn btn-success" click:"FakeIt" data-bind="click:FakeIt") Fake It!
+                    div
+                        span.text-danger.danger(id="errmsg")
+block additions_scripts
+    script(type="text/javascript" src="javascripts/vendor/chance.min.js")
+    script(type="text/javascript" src="javascripts/services/fakedata.jsonservice.js")
+    script(type="text/javascript" src="javascripts/main.js")
+        
