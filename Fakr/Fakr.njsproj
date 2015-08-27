@@ -32,26 +32,23 @@
   <ItemGroup>
     <Compile Include="app.js" />
     <Compile Include="node_services\jBloat.js" />
+    <Compile Include="node_services\logger.js" />
     <Compile Include="public\javascripts\services\FakeData.JsonService.js" />
     <Compile Include="public\javascripts\main.js" />
     <Compile Include="public\javascripts\vendor\chance.min.js" />
     <Compile Include="public\javascripts\vendor\knockout.mapping-latest.js" />
-    <Compile Include="public\javascripts\vendor\prettify.js" />
     <Compile Include="routes\api.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\edit.js" />
     <Compile Include="models\fakr.js" />
     <Content Include="package.json" />
-    <Content Include="public\stylesheets\vendor\prettify.css" />
-    <Content Include="public\stylesheets\main.css" />
+    <Content Include="public\images\favicon.ico" />
     <Content Include="public\stylesheets\style.styl" />
-    <Content Include="public\stylesheets\vendor\sunburst-prettyprint.css" />
-    <Content Include="README.md" />
-    <Content Include="views\edit.jade" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="logs\" />
     <Folder Include="node_services\" />
     <Folder Include="models\" />
     <Folder Include="public\" />

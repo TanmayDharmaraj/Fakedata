@@ -10,16 +10,14 @@ html
     link(rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css")
     link(rel="stylesheet" href="http://fonts.googleapis.com/css?family=Nothing+You+Could+Do|Permanent+Marker|Rock+Salt|Bangers")
     link(rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css")
-    link(rel="stylesheet" href="stylesheets/vendor/prettify.css")
-    link(rel="stylesheet" href="stylesheets/vendor/sunburst-prettyprint.css")
-    link(rel="stylesheet" href="stylesheets/main.css")
+    link(rel="stylesheet" href="stylesheets/style.css")
     
     //- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries
     <!--[if lt IE 9]>
     script(src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js")
     script(src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js")
     <![endif]-->
-  body(onload="prettyPrint()")
+  body
     nav(class="navbar navbar-fixed-top navbar-custom")
         div(class="container")
             div(class="navbar-header")
@@ -34,12 +32,19 @@ html
                 span(class="icon-bar")
               a(href="/" class="navbar-brand" style="font-family: 'Rock Salt', cursive;") #{title}
     block content
+
+   footer.footer
+        .margin-top-15.text-center
+            p.text-muted
+                span Made with 
+                    span.glyphicon.glyphicon-heart(aria-hidden="true" style="color:#B01712")
+                span  @
+                    a(href="http://www.zevenseas.com/" target="_blank")  RapidCircle
+
     script(type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js")
     script(type="text/javascript" src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js")
     script(type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/knockout/3.3.0/knockout-min.js")
     script(type="text/javascript" src="javascripts/vendor/knockout.mapping-latest.js")
     script(type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js")
-    script(type="text/javascript" src="javascripts/vendor/prettify.js")
-    
-
+    //script(type="text/javascript" src="javascripts/vendor/prettify.js")
     block additions_scripts

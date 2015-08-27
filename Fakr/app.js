@@ -7,6 +7,8 @@ var path = require('path');
 var Q = require('q');
 var nanoId = require('nano-id');
 var Fakr = require('./models/fakr');
+var favicon = require('serve-favicon');
+var logger = require('./node_services/logger');
 
 var router = express.Router();
 
@@ -24,10 +26,12 @@ var db = mongoose.connection;
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(require('morgan')("combined", { "stream": logger.stream }));
 
 router.get('/', routes.index);
 router.get('/edit', editRoute.edit);
