@@ -5,12 +5,14 @@ A web application that helps developers build fake JSON data quickly and easily.
 ----
 * [NodeJS](https://nodejs.org/)
 * [ExpressJS](https://github.com/joemccann/dillinger/tree/master/plugins/dropbox/README.md)
+* [Stylus](https://github.com/stylus/stylus)
 * [Jade](http://jade-lang.com/)
 * [MongoDB](https://www.mongodb.org/)
 * [Mongoose](http://mongoosejs.com/)
 * [ChanceJS](http://chancejs.com/)
 * [Nano-ID](https://github.com/rkivalin/nano-id)
 * [Q](https://github.com/kriskowal/q)
+* [Winston](https://github.com/winstonjs/winston)
 
 ToDos
 ----
