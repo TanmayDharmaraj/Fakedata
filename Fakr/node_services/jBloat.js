@@ -24,6 +24,9 @@ var jBloat = function (args,callback) {
                 case "FLT":
                     json[k] = chance.floating();
                     break;
+                case "BOOL":
+                    json[k] = chance.bool();
+                    break;
                 case "FN":
                     json[k] = chance.first();
                     break;
@@ -51,6 +54,8 @@ var jBloat = function (args,callback) {
                 case "CORD":
                     json[k] = chance.coordinates({ fixed: 2 });
                     break;
+                default:
+                    json[k] = null;
             }
         }
         return json;

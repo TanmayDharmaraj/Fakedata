@@ -33,10 +33,10 @@
     <Compile Include="app.js" />
     <Compile Include="node_services\jBloat.js" />
     <Compile Include="node_services\logger.js" />
+    <Compile Include="public\javascripts\app.js" />
+    <Compile Include="public\javascripts\services\FakeData.Helper.js" />
     <Compile Include="public\javascripts\services\FakeData.JsonService.js" />
-    <Compile Include="public\javascripts\main.js" />
     <Compile Include="public\javascripts\vendor\chance.min.js" />
-    <Compile Include="public\javascripts\vendor\knockout.mapping-latest.js" />
     <Compile Include="routes\api.js" />
     <Compile Include="routes\index.js" />
     <Compile Include="routes\edit.js" />
@@ -44,6 +44,7 @@
     <Content Include="package.json" />
     <Content Include="public\images\favicon.ico" />
     <Content Include="public\stylesheets\style.styl" />
+    <Content Include="routes\data_services.js" />
     <Content Include="views\index.jade" />
     <Content Include="views\layout.jade" />
   </ItemGroup>

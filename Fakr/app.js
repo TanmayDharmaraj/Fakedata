@@ -62,7 +62,8 @@ router.get('/d/:id', function (req, res) {
 })
 
 app.use('/', router);
-app.use('/api', require('./routes/api'));
+app.use('/api', [require('./routes/api'), require('./routes/data_services.js')]);
+
 
 
 http.createServer(app).listen(app.get('port'), function () {

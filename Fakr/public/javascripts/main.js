@@ -14,6 +14,7 @@ FakeData.app = (function ($) {
             { DataType: "Integer", Symbol: "INT" },
             { DataType: "Float", Symbol: "FLT" },
             { DataType: "First Name", Symbol: "FN" },
+            { DataType: "Boolean", Symbol: "BOOL" },
             { DataType: "Last Name", Symbol: "LN" },
             { DataType: "Gender", Symbol: "GDR" },
             { DataType: "Birthday", Symbol: "BD" },
@@ -42,7 +43,7 @@ FakeData.app = (function ($) {
         
         self.GeneratePreview = function () {
             var filteredArray = FakeData.JsonService.MakeJSON(self.JsonKeyValue(), { DataType: false });
-            var str = syntaxHighlight(JSON.stringify(filteredArray, undefined, 4));
+            var str = FakeData.Helper.SyntaxHiglight(JSON.stringify(filteredArray, undefined, 4));
             $("#JsonOutput>pre").html(str);
         };
         self.FakeIt = function () {
@@ -104,7 +105,7 @@ FakeData.app = (function ($) {
                             self.JsonKeyValue.push(new DataModel({
                                 Key : key,
                                 DataType : dt
-                            }));                      
+                            }));
                         });
                         self.GeneratePreview();
                     }
@@ -115,13 +116,13 @@ FakeData.app = (function ($) {
                 }
             });
         };
-
-        self.FakeIt_Edit_Put = function () { 
+        
+        self.FakeIt_Edit_Put = function () {
             var d = {};
             d.json = FakeData.JsonService.MakeJSON(self.JsonKeyValue(), { DataType: true });
             d.reps = document.getElementById("Reps").value;
             d.url = $("#fakr_url").val();
-
+            
             if ($.isEmptyObject(d.json)) {
                 toastr.warning('Our servers cannot tolerate blank data.', 'Mercy !');
                 return
@@ -147,47 +148,26 @@ FakeData.app = (function ($) {
                 });
             }
         };
-    }
-    
-    function syntaxHighlight(json) {
-        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
-            var cls = 'number';
-            if (/^"/.test(match)) {
-                if (/:$/.test(match)) {
-                    cls = 'key';
-                } else {
-                    cls = 'string';
-                }
-            } else if (/true|false/.test(match)) {
-                cls = 'boolean';
-            } else if (/null/.test(match)) {
-                cls = 'null';
-            }
-            return '<span class="' + cls + '">' + match + '</span>';
-        });
-    }
-
-    $(document).ready(function () {
-        //only numbers allowed for Reps
-        $("#Reps").keypress(function (e) {
-            //if the letter is not digit then display error and don't type anything
-            if (e.which != 8 && e.which != 0 && (e.which < 48 || e.which > 57)) {
-                //display error message
-                toastr.error("Digits Only","Oop :-(")
-                return false;
-            }
-
-        });
         
-        $("#btnEditPreviousJSON").click(function (e) {
-            e.preventDefault();
+        self.isEditing = ko.observable();
+        
+        self.EditPreviousJSON = function () {
             $("#edit_fakr").slideToggle("fast");
             //hide the fake it button to show update button
             $("#FakeIt").toggle()
             $("#FakeIt_Update").toggle()
+        }
+    }
+    
+    
+    $(document).ready(function () {
+        $("#Reps").keypress(function (event) {
+            if (!FakeData.Helper.isNumber(event)) {
+                toastr.error("Digits Only", "Oop :-(");
+                return false;
+            }
+            return true;
         });
-        
         ko.applyBindings(new ViewModel())
     })
 })($);

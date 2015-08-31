@@ -1,45 +1,48 @@
 ﻿extends layout
 
 block content
-    .container
+    .container(ng-app="fakr" ng-controller="FakeController as fakeCtrl")
         .row#banner
             .starter-template
                 h1 Create Awesome { Fake: "Data" }
                 p.lead Free for all. #[span(style="font-family: 'Nothing You Could Do', cursive;") Always!]
-                a(class="btn btn-primary btn-outline" id="btnEditPreviousJSON") Edit Previous JSON
+                a(class="btn btn-primary btn-outline" id="btnEditPreviousJSON" ng-click="fakeCtrl.toggle()") Edit Previous JSON
                 .heightFix(style="height:1em;margin:2em")
-                    #edit_fakr.row.text-center.margin-top-15(style="display:none")
+                    #edit_fakr.row.text-center.margin-top-15(ng-show="fakeCtrl.isEditPreviousJsonClicked")
                         .col-xs-5.col-xs-offset-3
                             input(type="text" id="fakr_url" class="form-control" placeholder="Your fakr URL or ID")
                         .pull-left  
-                            button(type="button" class="btn btn-success btn-outline" data-bind="click:FakeIt_Edit_Get") Get JSON
+                            button(type="button" class="btn btn-success btn-outline" ng-click="fakeCtrl.GetFake()") Get JSON
         #workspace
             .row
                 .col-sm-12.col-md-6.working-area#JsonInput.JsonKeyValues.text-center
-                    form.form-inline
-                        ul(data-bind="foreach: JsonKeyValue, visible: JsonKeyValue().length > 0" class="list-unstyled")
-                            li
+                    form.form-inline(novalidate)
+                        ul(class="list-unstyled")
+                            li(ng-repeat="jkv in fakeCtrl.JsonKeyValues")
                                 .form-group
                                     label.sr-only Json key
-                                    input(type="text" data-bind="value: Key" class="form-control" placeholder="Key")
+                                    input(type="text" ng-model="jkv.Key" class="form-control" placeholder="Key" required)
                                 .form-group
                                     label.sr-only Data Type
-                                    select(class="form-control" data-bind="options: $root.availableDataType, value: DataType, optionsText: 'DataType'")
+                                    select(class="form-control" ng-model="jkv.DataType" ng-options="item.DataType for item in fakeCtrl.DataTypes")
                                 .form-group
-                                    button(type="button" class="btn btn-danger btn-outline " data-bind="click: $root.DeleteJsonKeyValue") Remove
-                    button(type="button" class="btn btn-default btn-outline" data-bind="click: AddJsonKeyValue") Add
+                                    button(type="button" class="btn btn-danger btn-outline " ng-click="fakeCtrl.DeleteJsonKeyValue($index)") Remove
+                    button(type="button" class="btn btn-default btn-outline"  ng-click="fakeCtrl.AddJsonKeyValue()") Add
                 .col-sm-12.col-md-6.working-area#JsonOutput
                     pre
             .row.margin-top-05.center-block
                 .col-sm-12.text-center
-                    form.form-inline
+                    form.form-inline(novalidate)
                         .form-group
-                            input(type="text" id="Reps" class="form-control" placeholder="Repetitions? (Default 1)")
-                            button(type="button" class="btn btn-default btn-outline" data-bind="click:GeneratePreview") Preview
-                            button(type="button" class="btn btn-success" id="FakeIt" data-bind="click:FakeIt") Fake It!
-                            button(type="button" class="btn btn-success" style="display:none" id="FakeIt_Update" data-bind="click:FakeIt_Edit_Put") Update It!
+                            input(type="text" id="Reps" class="form-control" placeholder="Repetitions? (Default 1)" required)
+                            button(type="button" class="btn btn-default btn-outline" ng-click="fakeCtrl.GeneratePreview(fakeCtrl)") Preview
+                            button(type="button" class="btn btn-success" id="FakeIt" ng-click="fakeCtrl.FakeIt()" ng-hide="fakeCtrl.isEditPreviousJsonClicked" ) Fake It!
+                            button(type="button" class="btn btn-success" id="FakeIt_Update" ng-click="fakeCtrl.UpdateFake()" ng-show="fakeCtrl.isEditPreviousJsonClicked") Update It!  
+   
+ 
 block additions_scripts
     script(type="text/javascript" src="javascripts/vendor/chance.min.js")
     script(type="text/javascript" src="javascripts/services/fakedata.jsonservice.js")
-    script(type="text/javascript" src="javascripts/main.js")
+    script(type="text/javascript" src="javascripts/services/fakedata.helper.js")
+    script(type="text/javascript" src="javascripts/app.js")
         

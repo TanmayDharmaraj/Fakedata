@@ -1,20 +1,22 @@
 ﻿var FakeData = FakeData || {};
-
-FakeData.JsonService = (function (ko) {
+FakeData.JsonService = (function () {
     var MakeJSON = function (data, options) {
         var dt = options.DataType == true ? true : false;
         var filteredArray = {};
         
         if (dt == false) {
             ko.utils.arrayForEach(data, function (item) {
-                if (item.Key().trim() != "" && item.Key() != 'undefined') {
+                if (item.Key.trim() != "" && item.Key != 'undefined') {
                     var val = null;
-                    switch (item.DataType().Symbol) {
+                    switch (item.DataType.Symbol) {
                         case "INT":
                             val = chance.natural({ min: 0, max: 1000 });
                             break;
                         case "FLT":
                             val = chance.floating();
+                            break;
+                        case "BOOL":
+                            val = chance.bool();
                             break;
                         case "FN":
                             val = chance.first();
@@ -44,13 +46,13 @@ FakeData.JsonService = (function (ko) {
                             val = chance.coordinates({ fixed: 2 });
                             break;
                     }
-                    filteredArray[item.Key().trim()] = val;
+                    filteredArray[item.Key.trim()] = val;
                 }
             });
         } else {
             ko.utils.arrayForEach(data, function (item) {
-                if (item.Key().trim() != "" && item.Key() != 'undefined') {
-                    filteredArray[item.Key().trim()] = item.DataType().Symbol;
+                if (item.Key.trim() != "" && item.Key != 'undefined') {
+                    filteredArray[item.Key.trim()] = item.DataType.Symbol;
                 }
             });
         }
@@ -60,4 +62,4 @@ FakeData.JsonService = (function (ko) {
     return {
         MakeJSON: MakeJSON
     }
-})(ko);
+})();
