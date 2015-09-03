@@ -1,16 +1,11 @@
 ﻿var express = require('express');
 var bodyParser = require('body-parser');
 var routes = require('./routes');
-var editRoute = require('./routes/edit');
 var http = require('http');
 var path = require('path');
-var Q = require('q');
-var nanoId = require('nano-id');
-var Fakr = require('./models/fakr');
 var favicon = require('serve-favicon');
 var logger = require('./node_services/logger');
-
-var router = express.Router();
+var responseTime = require('response-time');
 
 var mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/fakedata", function (err) {
@@ -33,39 +28,12 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('morgan')("combined", { "stream": logger.stream }));
 
-router.get('/', routes.index);
-router.get('/edit', editRoute.edit);
-
-router.param('id', function (req, res, next, id) {
-    
-    if (nanoId.verify(id)) {
-        next();
-    }
-    else {
-        console.log("Not Verified")
-    }
+app.use('/', [routes.index, require('./routes/data_services.js')]);
+app.use('/api/v1', require('./routes/api_v1'));
+app.use(function (req, res) {
+    res.status(404).send("Requested resource not found")
 })
-router.get('/d/:id', function (req, res) {
-    Fakr.findOne({ unique_id: req.params.id }, function (err, fakrs) {
-        if (err) {
-            res.send(err);
-            return;
-        }
-        
-        if (fakrs && fakrs.data) {
-            res.json(fakrs.data);
-        }
-        else {
-            res.json({ message: 'No data returned for the given id', data: null })
-        }
-    });
-})
-
-app.use('/', router);
-app.use('/api', [require('./routes/api'), require('./routes/data_services.js')]);
-
-
-
+app.use(responseTime());
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });

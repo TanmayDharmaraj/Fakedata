@@ -35,12 +35,12 @@
             }
             var request = $http({
                 method: "post",
-                url: "/api/Fakrs",
+                url: "/api/v1/fakes",
                 data: d
             });
             request.success(function (d) {
                 if (d.data) {
-                    var url = location.href + "d/" + d.data.unique_id
+                    var url = location.href + "api/v1/fakes/" + d.data.unique_id
                     $("#workspace .row").removeClass("show").addClass("hide");
                     $("#workspace").append("<div id='link_output'><p class='lead text-center'><a href=" + url + ">" + url + "</a></p></div>");
                 }
@@ -56,6 +56,7 @@
         scope.UpdateFake = function () { 
             var d = {};
             d.json = FakeData.JsonService.MakeJSON(scope.JsonKeyValues, { DataType: true });
+            console.log(d.json);
             d.reps = document.getElementById("Reps").value;
             d.url = $("#fakr_url").val();
             
@@ -66,11 +67,12 @@
             else {
                 var request = $http({
                     method: 'PUT',
-                    url: '/api/Fakrs',
+                    url: '/api/v1/fakes',
                     data: d
                 });
                 
                 request.success(function (d) {
+                    console.log(d)
                     if (d.data) {
                         toastr.success("Your data has been updated successfully", "Awesome !");
                     }
@@ -89,14 +91,14 @@
             var obj = {};
             obj.data_type = true;
             obj.url = $("#fakr_url").val();
-            var request = $http.get('/api/Fakrs?data_type=' + obj.data_type + "&url=" + obj.url)
-            request.success(function (data) {
-                if (data) {
+            var request = $http.get('/api/v1/fakes?data_type=' + obj.data_type + "&url=" + obj.url)
+            request.success(function (d) {
+                if (d) {
                     //reset workspace to base view
                     $("#workspace>#link_output").remove();
                     $("#workspace .row").removeClass("hide").addClass("show");
                     
-                    data = data[0];
+                    var data = d.data[0];
                     scope.JsonKeyValues = [];
                     $.each(data, function (key, value) {
                         var length = scope.DataTypes.length;
@@ -111,7 +113,7 @@
                             DataType : dt
                         });
                     });
-                    self.GeneratePreview();
+                    scope.GeneratePreview();
                 }
             });
             request.error(function (err) {
@@ -120,9 +122,8 @@
             });
         };
         
-        $http.get('/api/data-types').success(function (data) {
-            console.log(this.DataTypes);
-            scope.DataTypes = data; console.log(data);
+        $http.get('/data-types').success(function (data) {
+            scope.DataTypes = data;
         })
     });
 })();

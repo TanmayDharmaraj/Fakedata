@@ -24,7 +24,7 @@ block content
                                     input(type="text" ng-model="jkv.Key" class="form-control" placeholder="Key" required)
                                 .form-group
                                     label.sr-only Data Type
-                                    select(class="form-control" ng-model="jkv.DataType" ng-options="item.DataType for item in fakeCtrl.DataTypes")
+                                    select(class="form-control" ng-model="jkv.DataType" ng-options="item.DataType for item in fakeCtrl.DataTypes | orderBy:'DataType'")
                                 .form-group
                                     button(type="button" class="btn btn-danger btn-outline " ng-click="fakeCtrl.DeleteJsonKeyValue($index)") Remove
                     button(type="button" class="btn btn-default btn-outline"  ng-click="fakeCtrl.AddJsonKeyValue()") Add
@@ -42,7 +42,8 @@ block content
  
 block additions_scripts
     script(type="text/javascript" src="javascripts/vendor/chance.min.js")
-    script(type="text/javascript" src="javascripts/services/fakedata.jsonservice.js")
-    script(type="text/javascript" src="javascripts/services/fakedata.helper.js")
+    script(type="text/javascript" src="javascripts/services/fakedata.JsonService.js")
+    script(type="text/javascript" src="javascripts/services/fakedata.PhotoService.js")
+    script(type="text/javascript" src="javascripts/services/fakedata.CommonHelper.js")
     script(type="text/javascript" src="javascripts/app.js")
         

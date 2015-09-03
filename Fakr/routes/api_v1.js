@@ -1,56 +1,71 @@
 ﻿var express = require('express');
 var jBloat = require('../node_services/jBloat.js');
 var nanoId = require('nano-id');
+var cacheManager = require('cache-manager');
+var memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: 10/*seconds*/ });
 var router = express.Router();
+var photoapi = require('../node_services/photos');
 
 //Schema
 var Fakr = require('../models/fakr');
 
-//Routes
-router.get('/fakrs/:id', function (req, res) {
-    Fakr.findOne({ unique_id: req.params.id }, function (err, fakrs) {
+function responder(res) {
+    return function respond(err, data) {
         if (err) {
-            res.send(err);
-            return;
+            var status = err.status || 500
+            res.status(status).json({ error: "Something went wrong.", data: null });
+        } else {
+            res.status(200).json({ error: null, data: data })
         }
-        
-        if (fakrs && fakrs.data) {
-            res.json(fakrs.data);
-        }
-        else {
-            res.json({ message: 'No data returned for the given id', data: null })
-        }
-    })
-});
+    };
+};
 
-router.route('/fakrs').get(function (req, res) {
-    var data_type = req.query.data_type;
-    var url = req.query.url;
-    if (isEmpty(data_type) || isEmpty(url)) res.json({ message: 'Mercy ! Our servers cannot tolerate blank data.', data: null });
-    
-    if (data_type && url) {
-        var arr_url = url.split('/');
-        var uniqueid = arr_url[arr_url.length - 1];
-        Fakr.findOne({ unique_id: uniqueid }, function (err, fakrs) {
+//A special route for shorter URLs
+router.get('/fakes/:id', function (req, res) {
+    var cacheKey = req.params.id;
+    memoryCache.wrap(cacheKey, function (cacheCallback) {
+        Fakr.findOne({ unique_id: req.params.id }, function (err, fakrs) {
             if (err) {
-                res.send(err);
-                return;
-            }
-            if (fakrs && fakrs.type_details) {
-                res.json(fakrs.type_details);
+                cacheCallback(err);
             }
             else {
-                res.json({ message: 'No data returned for the given id', data: null })
+                cacheCallback(null, fakrs.data);
             }
         })
+    }, { ttl: 20 }, responder(res));
+});
+
+router.route('/fakes').get(function (req, res) {
+    var data_type = req.query.data_type;
+    var url = req.query.url;
+    if (isEmpty(data_type) || isEmpty(url)) {
+        res.json({ message: 'You either forgot to add url or data_types as a querystring parameter.', data: null });
     }
-
-
+    else {
+        var arr_url = url.split('/');
+        var uniqueid = arr_url[arr_url.length - 1];
+        memoryCache.wrap(uniqueid, function (cacheCallback) {
+            Fakr.findOne({ unique_id: uniqueid }, function (err, fakrs) {
+                if (err) {
+                    cacheCallback(err, null);
+                }
+                else {
+                    cacheCallback(null, fakrs.type_details);
+                }
+            
+            });
+            
+        }, responder(res));
+    }
 }).post(function (req, res) {
-    var reps = req.body.reps;
+    
+    var reps = parseInt(req.body.reps) || 1;
     var json = req.body.json;
     if (isEmpty(json)) {
         res.json({ message: 'Mercy ! Our servers cannot tolerate blank data.', data: null })
+    }
+    else if (reps < 1 || reps > 500) {
+        res.json({ message: 'Sorry ! Our servers currently only allow a max of 500 repititions.', data: null })
     }
     else {
         jBloat({ reps: reps, json: json }, function (err, data) {
@@ -70,20 +85,23 @@ router.route('/fakrs').get(function (req, res) {
             })
         });
     }
-}).put(function (req, res) {
-    var reps = req.body.reps;
+}).put(function (req, res,next) {
+    var reps = parseInt(req.body.reps) || 1;
     var json = req.body.json;
-    var url = req.body.url
+    var url = req.body.url;
     
-    if (!url || !reps || !json) {
+   if (!url || !reps || isEmpty(json)) {
         res.json({ message: 'Mercy ! Our servers cannot tolerate blank data.', data: null });
+    }
+    else if (reps < 1 || reps > 500) {
+        res.json({ message: 'Sorry ! Our servers currently only allow a max of 500 repititions.', data: null })
     }
     else {
         var arr_uid = url.split('/');
         var uid = arr_uid[arr_uid.length - 1];
         
         if (!nanoId.verify(uid)) {
-            res.json({ message:'Hey ! Did you send the correct ID ?', data: null });
+            res.json({ message: 'Hey ! Seems like the ID you sent was invalid.', data: null });
         }
         jBloat({ reps: reps, json: json }, function (err, data) {
             if (err) {
@@ -101,12 +119,12 @@ router.route('/fakrs').get(function (req, res) {
             var options = {
                 new : true
             };
-
-            Fakr.findOneAndUpdate(query, update, options, function (err, x ,r) {
+            
+            Fakr.findOneAndUpdate(query, update, options, function (err, x , r) {
                 if (err) {
                     res.send(err);
-                }   
-                res.json({ message: 'Item has been added.', data: r.value });
+                }
+                res.json({ message: 'Item has been updated.', data: r.value });
             });
         });
     }

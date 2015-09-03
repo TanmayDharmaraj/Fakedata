@@ -1,7 +1,9 @@
 ﻿var chance = require('chance').Chance();
 var Q = require('q');
+var photoapi = require('../node_services/photos');
+var common = require('../public/javascripts/services/common');
 
-var jBloat = function (args,callback) {
+var jBloat = function (args, callback) {
     var json = args.json || null;
     var reps = args.reps || 0;
     var myArray = new Array();
@@ -11,54 +13,18 @@ var jBloat = function (args,callback) {
     
     return Q.all(myArray).then(function (data) {
         callback(null, data);
-    }).fail(function (e) { 
+    }).fail(function (e) {
         callback(e);
     })
-
+    
     function p_RandomizeObject(json) {
-        for (var k in json) {
-            switch (json[k]) {
-                case "INT":
-                    json[k] = chance.natural({ min: 0, max: 1000 });
-                    break;
-                case "FLT":
-                    json[k] = chance.floating();
-                    break;
-                case "BOOL":
-                    json[k] = chance.bool();
-                    break;
-                case "FN":
-                    json[k] = chance.first();
-                    break;
-                case "LN":
-                    json[k] = chance.last();
-                    break;
-                case "GDR":
-                    json[k] = chance.gender();
-                    break;
-                case "BD":
-                    json[k] = chance.birthday();
-                    break;
-                case "PHN":
-                    json[k] = chance.phone();
-                    break;
-                case "ZIP":
-                    json[k] = chance.zip();
-                    break;
-                case "WRD":
-                    json[k] = chance.word();
-                    break;
-                case "PARA":
-                    json[k] = chance.paragraph();
-                    break;
-                case "CORD":
-                    json[k] = chance.coordinates({ fixed: 2 });
-                    break;
-                default:
-                    json[k] = null;
+        return Q.fcall(function () {
+            for (var k in json) {
+                var value = json[k];
+                json[k] = common.Helper.Cases[value];
             }
-        }
-        return json;
+            return json;
+        });
     }
 }
 module.exports = jBloat;

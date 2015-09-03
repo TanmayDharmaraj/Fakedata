@@ -3,7 +3,7 @@ var router = express.Router();
 
 //Data Types
 router.get('/data-types', function (req, res) {
-	var data = [
+    var data = [
 		{ DataType: "Integer", Symbol: "INT" },
 		{ DataType: "Float", Symbol: "FLT" },
 		{ DataType: "First Name", Symbol: "FN" },
@@ -15,9 +15,10 @@ router.get('/data-types', function (req, res) {
 		{ DataType: "Zip", Symbol: "ZIP" },
 		{ DataType: "Word", Symbol: "WRD" },
 		{ DataType: "Paragraph", Symbol: "PARA" },
-		{ DataType: "Coordinates", Symbol: "CORD" }
-	];
-	res.json(data);
+		{ DataType: "Coordinates", Symbol: "CORD" },
+        { DataType: "Image (400x200)", Symbol: "IMG" }
+    ];
+    res.json(data);
 })
 
 module.exports = router;
