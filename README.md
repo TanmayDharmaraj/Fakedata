@@ -18,7 +18,7 @@ ToDos
 ----
 * Support composite objects for creating JSON
 * Add support to generate random image urls
-* Use Angular instead of Jade
+* Use Angular instead of KO
 
 Installation
 ----
