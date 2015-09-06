@@ -13,12 +13,13 @@ A web application that helps developers build fake JSON data quickly and easily.
 * [Nano-ID](https://github.com/rkivalin/nano-id)
 * [Q](https://github.com/kriskowal/q)
 * [Winston](https://github.com/winstonjs/winston)
+* [Cache-Manager](https://www.npmjs.com/package/cache-manager)
 
 ToDos
 ----
 * Support composite objects for creating JSON
-* Add support to generate random image urls
-* Use Angular instead of KO
+* ~~Add support to generate random image urls~~
+* ~~Use Angular instead of KO~~
 
 Installation
 ----
