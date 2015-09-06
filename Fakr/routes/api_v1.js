@@ -1,11 +1,13 @@
 ﻿var express = require('express');
 var jBloat = require('../node_services/jBloat.js');
 var nanoId = require('nano-id');
+var photoapi = require('../node_services/photos');
+var common = require('../public/javascripts/services/FakeData.CommonHelper');
+
 var cacheManager = require('cache-manager');
 var memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: 10/*seconds*/ });
-var router = express.Router();
-var photoapi = require('../node_services/photos');
 
+var router = express.Router();
 //Schema
 var Fakr = require('../models/fakr');
 
@@ -22,41 +24,48 @@ function responder(res) {
 
 //A special route for shorter URLs
 router.get('/fakes/:id', function (req, res) {
+    
     var cacheKey = req.params.id;
-    memoryCache.wrap(cacheKey, function (cacheCallback) {
-        Fakr.findOne({ unique_id: req.params.id }, function (err, fakrs) {
+    var details = req.query.details ? true : false;
+    var selectFields = "";
+    if (details)
+        
+        selectFields = "unique_id data type_details timestamp -_id";
+    else
+        selectFields = "unique_id data -_id";
+    
+    memoryCache.wrap(cacheKey + "_" + details, function (cacheCallback) {
+        Fakr.findOne({ unique_id: cacheKey }, selectFields, function (err, fakrs) {
             if (err) {
                 cacheCallback(err);
             }
             else {
-                cacheCallback(null, fakrs.data);
+                cacheCallback(null, fakrs);
             }
-        })
+        });
     }, { ttl: 20 }, responder(res));
 });
 
 router.route('/fakes').get(function (req, res) {
-    var data_type = req.query.data_type;
-    var url = req.query.url;
-    if (isEmpty(data_type) || isEmpty(url)) {
-        res.json({ message: 'You either forgot to add url or data_types as a querystring parameter.', data: null });
-    }
-    else {
-        var arr_url = url.split('/');
-        var uniqueid = arr_url[arr_url.length - 1];
-        memoryCache.wrap(uniqueid, function (cacheCallback) {
-            Fakr.findOne({ unique_id: uniqueid }, function (err, fakrs) {
-                if (err) {
-                    cacheCallback(err, null);
-                }
-                else {
-                    cacheCallback(null, fakrs.type_details);
-                }
+    var details = req.query.details ? true : false;
+    var selectFields = "";
+    if (details)
+        selectFields = "unique_id data type_details timestamp -_id";
+    else
+        selectFields = "unique_id data -_id";
+    
+    memoryCache.wrap("allfakes_" + details, function (cacheCallback) {
+        Fakr.find({}, selectFields, function (err, fakrs) {
+            if (err) {
+                cacheCallback(err, null);
+            }
+            else {
+                cacheCallback(null, fakrs);
+            }
             
-            });
+        });
             
-        }, responder(res));
-    }
+    }, responder(res));
 }).post(function (req, res) {
     
     var reps = parseInt(req.body.reps) || 1;
@@ -85,12 +94,12 @@ router.route('/fakes').get(function (req, res) {
             })
         });
     }
-}).put(function (req, res,next) {
+}).put(function (req, res, next) {
     var reps = parseInt(req.body.reps) || 1;
     var json = req.body.json;
     var url = req.body.url;
     
-   if (!url || !reps || isEmpty(json)) {
+    if (!url || !reps || common.Helper.isEmpty(json)) {
         res.json({ message: 'Mercy ! Our servers cannot tolerate blank data.', data: null });
     }
     else if (reps < 1 || reps > 500) {
@@ -130,25 +139,5 @@ router.route('/fakes').get(function (req, res) {
     }
 
 });
-
-
-function isEmpty(obj) {
-    // null and undefined are "empty"
-    if (obj == null) return true;
-    
-    // Assume if it has a length property with a non-zero value
-    // that that property is correct.
-    if (obj.length && obj.length > 0) return false;
-    if (obj.length === 0) return true;
-    
-    // Otherwise, does it have any properties of its own?
-    // Note that this doesn't handle
-    // toString and toValue enumeration bugs in IE < 9
-    for (var key in obj) {
-        if (hasOwnProperty.call(obj, key)) return false;
-    }
-    
-    return true;
-}
 
 module.exports = router;

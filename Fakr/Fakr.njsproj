@@ -31,6 +31,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="public\javascripts\appRoutes.js" />
+    <Compile Include="public\javascripts\controllers\ExploreCtrl.js" />
+    <Compile Include="public\javascripts\controllers\MainCtrl.js" />
     <Compile Include="public\javascripts\services\FakeData.CommonHelper.js" />
     <Compile Include="node_services\photos.js" />
     <Compile Include="node_services\jBloat.js" />
@@ -39,14 +42,16 @@
     <Compile Include="public\javascripts\services\FakeData.JsonService.js" />
     <Compile Include="public\javascripts\services\FakeData.PhotoService.js" />
     <Compile Include="public\javascripts\vendor\chance.min.js" />
+    <Compile Include="public\javascripts\vendor\masonry.min.js" />
     <Compile Include="routes\api_v1.js" />
-    <Compile Include="routes\index.js" />
+    <Compile Include="routes\routes.js" />
     <Compile Include="models\fakr.js" />
     <Content Include="package.json" />
     <Content Include="public\images\favicon.ico" />
     <Content Include="public\stylesheets\style.styl" />
     <Content Include="routes\data_services.js" />
-    <Content Include="views\index.jade" />
+    <Content Include="views\partials\explore.jade" />
+    <Content Include="views\partials\home.jade" />
     <Content Include="views\layout.jade" />
   </ItemGroup>
   <ItemGroup>
@@ -56,12 +61,14 @@
     <Folder Include="public\" />
     <Folder Include="public\images\" />
     <Folder Include="public\javascripts\" />
+    <Folder Include="public\javascripts\controllers\" />
     <Folder Include="public\javascripts\services\" />
     <Folder Include="public\javascripts\vendor\" />
     <Folder Include="public\stylesheets\" />
     <Folder Include="public\stylesheets\vendor\" />
     <Folder Include="routes\" />
     <Folder Include="views\" />
+    <Folder Include="views\partials\" />
   </ItemGroup>
   <!-- Do not delete the following Import Project.  While this appears to do nothing it is a marker for setting TypeScript properties before our import that depends on them. -->
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="False" />
