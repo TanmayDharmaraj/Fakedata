@@ -30,9 +30,9 @@ router.get('/fakes/:id', function (req, res) {
     var selectFields = "";
     if (details)
         
-        selectFields = "unique_id data type_details timestamp -_id";
+        selectFields = "unique_id data type_details name timestamp -_id";
     else
-        selectFields = "unique_id data -_id";
+        selectFields = "unique_id data name -_id";
     
     memoryCache.wrap(cacheKey + "_" + details, function (cacheCallback) {
         Fakr.findOne({ unique_id: cacheKey }, selectFields, function (err, fakrs) {
@@ -50,9 +50,9 @@ router.route('/fakes').get(function (req, res) {
     var details = req.query.details ? true : false;
     var selectFields = "";
     if (details)
-        selectFields = "unique_id data type_details timestamp -_id";
+        selectFields = "unique_id data type_details timestamp name -_id";
     else
-        selectFields = "unique_id data -_id";
+        selectFields = "unique_id data name -_id";
     
     memoryCache.wrap("allfakes_" + details, function (cacheCallback) {
         Fakr.find({}, selectFields, function (err, fakrs) {
@@ -69,6 +69,7 @@ router.route('/fakes').get(function (req, res) {
 }).post(function (req, res) {
     
     var reps = parseInt(req.body.reps) || 1;
+    var name = req.body.name || "";
     var json = req.body.json;
     if (isEmpty(json)) {
         res.json({ message: 'Mercy ! Our servers cannot tolerate blank data.', data: null })
@@ -86,7 +87,8 @@ router.route('/fakes').get(function (req, res) {
             fakr.unique_id = nanoId(13);
             fakr.timestamp = new Date().toString();
             fakr.data = data;
-            fakr.type_details = req.body.json;
+            fakr.type_details = json;
+            fakr.name = name;
             fakr.save(function (err) {
                 if (err)
                     res.send(err);
@@ -98,7 +100,8 @@ router.route('/fakes').get(function (req, res) {
     var reps = parseInt(req.body.reps) || 1;
     var json = req.body.json;
     var url = req.body.url;
-    
+    var name = req.body.name || "";
+
     if (!url || !reps || common.Helper.isEmpty(json)) {
         res.json({ message: 'Mercy ! Our servers cannot tolerate blank data.', data: null });
     }
@@ -122,7 +125,8 @@ router.route('/fakes').get(function (req, res) {
             var update = {
                 timestamp: new Date().toString(),
                 data : data,
-                type_details: req.body.json
+                type_details: req.body.json,
+                name : name
             };
             
             var options = {

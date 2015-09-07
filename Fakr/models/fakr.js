@@ -3,6 +3,7 @@
 //Schema
 var fakrSchema = new mongoose.Schema({
     unique_id: { type: String, unique: true },
+    name: { type: String },
     timestamp: { type: Date, default: Date.now },
     data: [],
     type_details: []

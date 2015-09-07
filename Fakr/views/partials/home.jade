@@ -9,7 +9,7 @@
                     .col-xs-5.col-xs-offset-3
                         input(type="text" id="fakr_url" class="form-control" placeholder="Your fakr URL or ID")
                     .pull-left  
-                        button(type="button" class="btn btn-success btn-outline" ng-click="main.GetFake()") Get JSON
+                        button(type="button" class="btn btn-success btn-outline" ng-click="main.GetFake()") Get Fake
     #workspace
         .row  
             .col-sm-12.col-md-6.working-area#JsonInput.JsonKeyValues.text-center
@@ -29,11 +29,13 @@
                 pre
         .row.margin-top-05.center-block
             .col-sm-12.text-center
-                form.form-inline(novalidate)
+                form(novalidate)
+                    .form-inline.form-group
+                        input(type="text" id="FakeName" class="form-control" placeholder="Call me some thing !" required)
+                        input(type="number" id="Reps" class="form-control" placeholder="Repetitions" min="1" max="500" required)
                     .form-group
-                        input(type="text" id="Reps" class="form-control" placeholder="Repetitions? (Default 1)" required)
                         button(type="button" class="btn btn-default btn-outline" ng-click="main.GeneratePreview(main)") Preview
-                        button(type="button" class="btn btn-success" id="FakeIt" ng-click="main.FakeIt()" ng-hide="main.isEditPreviousJsonClicked" ) Fake It!
+                        button(type="button" class="btn btn-success" size="12px" id="FakeIt" ng-click="main.FakeIt()" ng-hide="main.isEditPreviousJsonClicked" ) Fake It!
                         button(type="button" class="btn btn-success" id="FakeIt_Update" ng-click="main.UpdateFake()" ng-show="main.isEditPreviousJsonClicked") Update It!  
 
     script(type="text/javascript" src="javascripts/vendor/chance.min.js")

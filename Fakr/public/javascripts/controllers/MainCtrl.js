@@ -27,6 +27,7 @@
             var d = {};
             d.json = FakeData.JsonService.MakeJSON(self.JsonKeyValues, { DataType: true });
             d.reps = document.getElementById("Reps").value;
+            d.name = document.getElementById("FakeName").value;
             if ($.isEmptyObject(d.json)) {
                 toastr.warning('Our servers cannot tolerate blank data.', 'Mercy !');
                 return
@@ -54,7 +55,7 @@
         self.UpdateFake = function () {
             var d = {};
             d.json = FakeData.JsonService.MakeJSON(self.JsonKeyValues, { DataType: true });
-            console.log(d.json);
+            d.name = document.getElementById("FakeName").value;
             d.reps = document.getElementById("Reps").value;
             d.url = $("#fakr_url").val();
             
@@ -97,21 +98,20 @@
                     //reset workspace to base view
                     $("#workspace>#link_output").remove();
                     $("#workspace .row").removeClass("hide").addClass("show");
-                    
-                    var data = d.data[0];
+                    console.log(d)
+                    var data = d.data.type_details[0];
                     self.JsonKeyValues = [];
-                    $.each(data, function (key, value) {
+                    $.each(data, function (key, value) {                 
                         var length = self.DataTypes.length;
-                        var dt = null;
                         for (var i = 0; i < length; i++) {
                             if (self.DataTypes[i].Symbol === value) {
-                                dt = self.DataTypes[i];
+                                self.JsonKeyValues.push({
+                                    Key : key,
+                                    DataType : self.DataTypes[i]
+                                });
+                                break;
                             }
                         }
-                        self.JsonKeyValues.push({
-                            Key : key,
-                            DataType : dt
-                        });
                     });
                     self.GeneratePreview();
                 }
@@ -122,8 +122,8 @@
             });
         };
         
-        $http.get('/data-types').success(function (data) {
-            self.DataTypes = data;
+        $http.get('/svc/data-types').success(function (d) {
+            self.DataTypes = d.data;
         })
 
     }]);

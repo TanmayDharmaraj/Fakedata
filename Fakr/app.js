@@ -27,11 +27,15 @@ app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(require('morgan')("combined", { "stream": logger.stream }));
 
+/*data-service routes*/
+app.use('/svc', require('./routes/data_services.js'));
+
 /*frontend routes */
 require('./routes/routes.js')(app);
 
 /*API routes*/
 app.use('/api/v1', require('./routes/api_v1'));
+
 
 /*404*/
 app.use(function (req, res) {
