@@ -38,11 +38,11 @@ app.use('/api/v1', require('./routes/api_v1'));
 
 
 /*404*/
-app.use(function (req, res) {
+app.use('*',function (req, res) {
     res.status(404).send("Requested resource not found")
 });
 
-app.use(responseTime());
+//app.use(responseTime());
 http.createServer(app).listen(app.get('port'), function () {
     console.log('Express server listening on port ' + app.get('port'));
 });

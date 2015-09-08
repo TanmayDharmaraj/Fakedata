@@ -24,21 +24,17 @@
                                 select(class="form-control" ng-model="jkv.DataType" ng-options="item.DataType for item in main.DataTypes | orderBy:'DataType'")
                             .form-group
                                 button(type="button" class="btn btn-danger btn-outline " ng-click="main.DeleteJsonKeyValue($index)") Remove
-                button(type="button" class="btn btn-default btn-outline"  ng-click="main.AddJsonKeyValue()") Add
+                    .form-group
+                        button(type="button" class="btn btn-default btn-outline"  ng-click="main.AddJsonKeyValue()") Add
+                        button(type="button" class="btn btn-default btn-outline" ng-click="main.GeneratePreview(main)") Preview
             .col-sm-12.col-md-6.working-area#JsonOutput
                 pre
         .row.margin-top-05.center-block
             .col-sm-12.text-center
                 form(novalidate)
                     .form-inline.form-group
-                        input(type="text" id="FakeName" class="form-control" placeholder="Call me some thing !" required)
+                        input(type="text" id="FakeName" class="form-control" placeholder="Call me some thing !" required ng-model="main.FakeName")
                         input(type="number" id="Reps" class="form-control" placeholder="Repetitions" min="1" max="500" required)
                     .form-group
-                        button(type="button" class="btn btn-default btn-outline" ng-click="main.GeneratePreview(main)") Preview
                         button(type="button" class="btn btn-success" size="12px" id="FakeIt" ng-click="main.FakeIt()" ng-hide="main.isEditPreviousJsonClicked" ) Fake It!
-                        button(type="button" class="btn btn-success" id="FakeIt_Update" ng-click="main.UpdateFake()" ng-show="main.isEditPreviousJsonClicked") Update It!  
-
-    script(type="text/javascript" src="javascripts/vendor/chance.min.js")
-    script(type="text/javascript" src="javascripts/services/fakedata.JsonService.js")
-    script(type="text/javascript" src="javascripts/services/fakedata.PhotoService.js")
-    script(type="text/javascript" src="javascripts/services/fakedata.CommonHelper.js")
+                        button(type="button" class="btn btn-success" id="FakeIt_Update" ng-click="main.UpdateFake()" ng-show="main.isEditPreviousJsonClicked") Update It!

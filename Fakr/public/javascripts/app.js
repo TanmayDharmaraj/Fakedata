@@ -1,1 +1,1 @@
-﻿angular.module("fakr", ['ngRoute','appRoutes','MainCtrl','ExploreCtrl']);
+﻿angular.module("fakr", ['ngRoute','appRoutes','MainCtrl','ExploreCtrl','ExploreItemCtrl']);

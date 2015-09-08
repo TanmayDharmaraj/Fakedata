@@ -1,6 +1,5 @@
 ﻿var chance = require('chance').Chance();
 var Q = require('q');
-var photoapi = require('../node_services/photos');
 var common = require('../public/javascripts/services/FakeData.CommonHelper');
 
 var jBloat = function (args, callback) {
@@ -21,7 +20,8 @@ var jBloat = function (args, callback) {
         return Q.fcall(function () {
             for (var k in json) {
                 var value = json[k];
-                json[k] = common.Helper.Cases[value];
+
+                json[k] = common.Helper.Cases[value]();
             }
             return json;
         });

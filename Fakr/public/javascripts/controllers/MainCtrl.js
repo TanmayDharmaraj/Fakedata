@@ -2,6 +2,8 @@
         var self = this;
         self.DataTypes = [];
         self.isEditPreviousJsonClicked = false;
+        self.FakeName = "";
+
         self.toggle = function () {
             
             this.isEditPreviousJsonClicked = !this.isEditPreviousJsonClicked;
@@ -98,7 +100,8 @@
                     //reset workspace to base view
                     $("#workspace>#link_output").remove();
                     $("#workspace .row").removeClass("hide").addClass("show");
-                    console.log(d)
+
+                    self.FakeName = d.data.name
                     var data = d.data.type_details[0];
                     self.JsonKeyValues = [];
                     $.each(data, function (key, value) {                 

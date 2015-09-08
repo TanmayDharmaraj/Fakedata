@@ -1,10 +1,18 @@
-﻿angular.module('ExploreCtrl', []).controller('ExploreController', ['$scope', '$http', function ($scope,$http) {
+﻿angular.module('ExploreCtrl', ['ngSanitize']).controller('ExploreController', ['$scope', '$http', function ($scope, $http) {
         var self = this;
         self.Fakes = [];
-        $scope.message = 'Look! I am an about page.';
-        $http.get('/api/v1/fakes').success(function (d) {
-            self.Fakes = d.data;
-            console.log(data)
+        
+        $http.get('/api/v1/fakes?details=true').success(function (d) {
+            var data = d.data;
+            $.each(data, function (key, value) {
+                self.Fakes.push({
+                    name: value.name,
+                    unique_id : value.unique_id,
+                    timestamp : value.timestamp,
+                    type_details : value.type_details,
+                    data: JSON.stringify(value.data[0],undefined,4)
+                });
+            });
         })
 
     }]);

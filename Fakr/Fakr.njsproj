@@ -34,13 +34,12 @@
     <Compile Include="public\javascripts\appRoutes.js" />
     <Compile Include="public\javascripts\controllers\ExploreCtrl.js" />
     <Compile Include="public\javascripts\controllers\MainCtrl.js" />
+    <Compile Include="public\javascripts\controllers\ExploreItemCtrl.js" />
     <Compile Include="public\javascripts\services\FakeData.CommonHelper.js" />
-    <Compile Include="node_services\photos.js" />
     <Compile Include="node_services\jBloat.js" />
     <Compile Include="node_services\logger.js" />
     <Compile Include="public\javascripts\app.js" />
     <Compile Include="public\javascripts\services\FakeData.JsonService.js" />
-    <Compile Include="public\javascripts\services\FakeData.PhotoService.js" />
     <Compile Include="public\javascripts\vendor\chance.min.js" />
     <Compile Include="public\javascripts\vendor\masonry.min.js" />
     <Compile Include="routes\api_v1.js" />
@@ -53,6 +52,7 @@
     <Content Include="views\partials\explore.jade" />
     <Content Include="views\partials\home.jade" />
     <Content Include="views\layout.jade" />
+    <Content Include="views\partials\explore_item.jade" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="logs\" />

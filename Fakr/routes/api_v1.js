@@ -1,7 +1,6 @@
 ﻿var express = require('express');
 var jBloat = require('../node_services/jBloat.js');
 var nanoId = require('nano-id');
-var photoapi = require('../node_services/photos');
 var common = require('../public/javascripts/services/FakeData.CommonHelper');
 
 var cacheManager = require('cache-manager');
@@ -71,7 +70,7 @@ router.route('/fakes').get(function (req, res) {
     var reps = parseInt(req.body.reps) || 1;
     var name = req.body.name || "";
     var json = req.body.json;
-    if (isEmpty(json)) {
+    if (common.Helper.isEmpty(json)) {
         res.json({ message: 'Mercy ! Our servers cannot tolerate blank data.', data: null })
     }
     else if (reps < 1 || reps > 500) {

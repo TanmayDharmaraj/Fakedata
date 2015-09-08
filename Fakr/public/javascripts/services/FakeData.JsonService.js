@@ -8,7 +8,7 @@ FakeData.JsonService = (function () {
         if (dt == false) {
            $.each(data, function (index, item) {
                 if (item.Key.trim() != "" && item.Key != 'undefined') {
-                    var val = FakeData.Helper.Cases[item.DataType.Symbol];
+                    var val = FakeData.Helper.Cases[item.DataType.Symbol]();
                     filteredArray[item.Key.trim()] = val;
                 }
             });
