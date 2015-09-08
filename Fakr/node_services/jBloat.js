@@ -1,5 +1,4 @@
-﻿var chance = require('chance').Chance();
-var Q = require('q');
+﻿var Q = require('q');
 var common = require('../public/javascripts/services/FakeData.CommonHelper');
 
 var jBloat = function (args, callback) {
