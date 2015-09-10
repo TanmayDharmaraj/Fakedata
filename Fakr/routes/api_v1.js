@@ -46,7 +46,10 @@ router.get('/fakes/:id', function (req, res) {
                 cacheCallback(err);
             }
             else {
-                cacheCallback(null, fakrs);
+                if (!fakrs)
+                    cacheCallback(null, "No data returned")
+                else
+                    cacheCallback(null, fakrs);
             }
         });
     }, { ttl: 20 }, responder(res));
@@ -67,7 +70,10 @@ router.route('/fakes').get(function (req, res) {
                 cacheCallback(err);
             }
             else {
-                cacheCallback(null, fakrs);
+                if (!fakrs)
+                    cacheCallback(null, "No data returned")
+                else
+                    cacheCallback(null, fakrs);
             }
             
         });
@@ -105,7 +111,10 @@ router.route('/fakes').get(function (req, res) {
                     res.status(500).json({ error: { message: 'Something went wrong while saving your data.', timestamp: Date.now() }, data: null });
                     return;
                 }
-                res.status(200).json({ error: null, data: fakr });
+                else {
+                    res.status(201).json({ error: null, data: fakr });
+                }
+                
             })
         });
     }
