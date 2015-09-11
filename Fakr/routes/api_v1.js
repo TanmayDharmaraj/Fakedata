@@ -2,7 +2,7 @@
 var jBloat = require('../node_services/jBloat.js');
 var nanoId = require('nano-id');
 var common = require('../public/javascripts/services/FakeData.CommonHelper');
-var logger = require('../node_services/logger');
+//var logger = require('../node_services/logger');
 
 var cacheManager = require('cache-manager');
 var memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: 10/*seconds*/ });
@@ -15,7 +15,7 @@ function responder(res) {
     return function respond(err, data) {
         if (err) {
             var status = err.status || 500
-            logger.error(err);
+            console.error(err);
             res.status(status).json({ error: { message: "Something went wrong.", timestamp: Date.now() }, data: null });
 
         } else {
@@ -42,7 +42,7 @@ router.get('/fakes/:id', function (req, res) {
     memoryCache.wrap(cacheKey + "_" + details, function (cacheCallback) {
         Fakr.findOne({ unique_id: cacheKey }, selectFields, function (err, fakrs) {
             if (err) {
-                logger.error(err)
+                console.error(err)
                 cacheCallback(err);
             }
             else {
@@ -66,7 +66,7 @@ router.route('/fakes').get(function (req, res) {
     memoryCache.wrap("allfakes_" + details, function (cacheCallback) {
         Fakr.find({}, selectFields, function (err, fakrs) {
             if (err) {
-                logger.error(err);
+                console.error(err);
                 cacheCallback(err);
             }
             else {
@@ -95,7 +95,7 @@ router.route('/fakes').get(function (req, res) {
     else {
         jBloat({ reps: reps, json: json }, function (err, data) {
             if (err) {
-                logger.error(err);
+                console.error(err);
                 res.status(500).json({ error: { message: 'Failed to create json data.', timestamp: Date.now() }, data: null });
                 return;
             }
@@ -107,7 +107,7 @@ router.route('/fakes').get(function (req, res) {
             fakr.name = name;
             fakr.save(function (err) {
                 if (err) {
-                    logger.error(err);
+                    console.error(err);
                     res.status(500).json({ error: { message: 'Something went wrong while saving your data.', timestamp: Date.now() }, data: null });
                     return;
                 }
@@ -142,7 +142,7 @@ router.route('/fakes').get(function (req, res) {
         }
         jBloat({ reps: reps, json: json }, function (err, data) {
             if (err) {
-                logger.error(err);
+                console.error(err);
                 return;
             }
             var query = { unique_id: uid };
@@ -160,7 +160,7 @@ router.route('/fakes').get(function (req, res) {
             
             Fakr.findOneAndUpdate(query, update, options, function (err, x , r) {
                 if (err) {
-                    logger.error(err);
+                    console.error(err);
                     res.status(500).json({ error: { message: 'Hey ! Seems like the ID you sent was invalid.', timestamp: Date.now() }, data: null });
                     return;
                 }

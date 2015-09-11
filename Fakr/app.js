@@ -3,7 +3,7 @@ var bodyParser = require('body-parser');
 var http = require('http');
 var path = require('path');
 var favicon = require('serve-favicon');
-var logger = require('./node_services/logger');
+//var logger = require('./node_services/logger');
 var responseTime = require('response-time');
 
 var mongoose = require('mongoose');
@@ -25,7 +25,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(require('stylus').middleware(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '/public')));
-app.use(require('morgan')("combined", { "stream": logger.stream }));
+app.use(require('morgan')("combined", {
+    "stream": {
+        write: function (str) {
+            process.stdout.write(str)
+        }
+    }
+}));
 
 /*data-service routes*/
 app.use('/svc', require('./routes/data_services.js'));

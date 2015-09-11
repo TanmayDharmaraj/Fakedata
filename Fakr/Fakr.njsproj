@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="app.js" />
+    <Compile Include="cluster.js" />
     <Compile Include="public\javascripts\appRoutes.js" />
     <Compile Include="public\javascripts\controllers\ExploreCtrl.js" />
     <Compile Include="public\javascripts\controllers\MainCtrl.js" />
