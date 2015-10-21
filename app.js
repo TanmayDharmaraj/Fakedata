@@ -6,15 +6,15 @@ var favicon = require('serve-favicon');
 //var logger = require('./node_services/logger');
 var responseTime = require('response-time');
 
-var mongoose = require('mongoose');
+/*var mongoose = require('mongoose');
 mongoose.connect("mongodb://localhost:27017/fakedata", function (err) {
     if (err) {
         console.log(err);
     }
 });
-
+*/
 var app = express();
-var db = mongoose.connection;
+//var db = mongoose.connection;
 
 // all environments
 app.set('port', process.env.PORT || 3000);
