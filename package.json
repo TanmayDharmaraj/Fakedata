@@ -7,6 +7,9 @@
     "name": "Tanmay Dharmaraj",
     "email": "tanmay.dharmaraj@zevenseas.com"
   },
+  "scripts": {
+    "start": "node app.js"
+  },
   "dependencies": {
     "async": "^1.4.2",
     "body-parser": "^1.13.3",
