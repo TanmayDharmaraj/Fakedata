@@ -42,8 +42,8 @@
             request.success(function (d) {
                 if (d.data) {
                     var url = location.href + "api/v1/fakes/" + d.data.unique_id
-                    $("#workspace .row").removeClass("show").addClass("hide");
-                    $("#workspace").append("<div id='link_output'><p class='lead text-center'><a href=" + url + ">" + url + "</a></p></div>");
+                    /*$("#workspace .row").removeClass("show").addClass("hide");
+                    $("#workspace").append("<div id='link_output'><p class='lead text-center'><a href=" + url + ">" + url + "</a></p></div>");*/
                 }
                 else {
                     toastr.error('You probably sent blank data which resulted in the server rejecting your request.', 'Oops! :-(');

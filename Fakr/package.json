@@ -8,6 +8,7 @@
     "email": "tanmay.dharmaraj@zevenseas.com"
   },
   "dependencies": {
+    "async": "^1.4.2",
     "body-parser": "^1.13.3",
     "cache-manager": "^1.1.0",
     "chance": "^0.7.6",

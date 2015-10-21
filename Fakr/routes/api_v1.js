@@ -2,15 +2,14 @@
 var jBloat = require('../node_services/jBloat.js');
 var nanoId = require('nano-id');
 var common = require('../public/javascripts/services/FakeData.CommonHelper');
-//var logger = require('../node_services/logger');
-
 var cacheManager = require('cache-manager');
 var memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: 10/*seconds*/ });
-
-var router = express.Router();
 //Schema
 var Fakr = require('../models/fakr');
 
+var router = express.Router();
+
+//abstracted responder for cached requests
 function responder(res) {
     return function respond(err, data) {
         if (err) {
@@ -26,32 +25,40 @@ function responder(res) {
 
 //A special route for shorter URLs
 router.get('/fakes/:id', function (req, res) {
-    
     var cacheKey = req.params.id;
     var details = req.query.details ? true : false;
-    var selectFields = "";
-    if (details)
-        selectFields = "unique_id data type_details name timestamp -_id";
-    else
-        selectFields = "unique_id data name -_id";
+    
     
     if (!nanoId.verify(cacheKey)) {
         res.status(500).json({ error: { message: 'Hey ! Seems like the ID you sent was invalid.', timestamp: Date.now() }, data: null });
         return;
     }
     memoryCache.wrap(cacheKey + "_" + details, function (cacheCallback) {
-        Fakr.findOne({ unique_id: cacheKey }, selectFields, function (err, fakrs) {
+        var selectFields = "";
+        if (details)
+            selectFields = "unique_id data type_details name timestamp -_id";
+        else
+            selectFields = "unique_id data name -_id";
+
+        var options = {
+            query : { unique_id: cacheKey },
+            projection : selectFields
+        }
+
+        jBloat.Get(options, function (err, data) {
             if (err) {
                 console.error(err)
                 cacheCallback(err);
             }
-            else {
-                if (!fakrs)
-                    cacheCallback(null, "No data returned")
-                else
-                    cacheCallback(null, fakrs);
+            else if (!data) {
+                cacheCallback(null, "No data returned")
             }
-        });
+            else {
+                cacheCallback(null, data);
+            }
+        
+        })
+       
     }, { ttl: 20 }, responder(res));
 });
 
@@ -88,35 +95,21 @@ router.route('/fakes').get(function (req, res) {
         res.status(500).json({ error: { message: 'Mercy ! Our servers cannot tolerate blank data.', timestamp: Date.now() }, data: null });
         return;
     }
-    else if (reps < 1 || reps > 500) {
-        res.status(500).json({ error: { message: 'Sorry ! Our servers currently only allow a max of 500 repititions.', timestamp: Date.now() }, data: null });
+    else if (reps < 1 || reps > 100000) {
+        res.status(500).json({ error: { message: 'Sorry ! Our servers currently only allow a maximum of 100,000 repititions.', timestamp: Date.now() }, data: null });
         return;
     }
     else {
-        jBloat({ reps: reps, json: json }, function (err, data) {
+        var start = new Date().getTime();
+        jBloat.New({ reps: reps, json: json, name: name }, function (err, data) {
             if (err) {
                 console.error(err);
-                res.status(500).json({ error: { message: 'Failed to create json data.', timestamp: Date.now() }, data: null });
-                return;
             }
-            var fakr = new Fakr();
-            fakr.unique_id = nanoId(13);
-            fakr.timestamp = Date.now();
-            fakr.data = data;
-            fakr.type_details = json;
-            fakr.name = name;
-            fakr.save(function (err) {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({ error: { message: 'Something went wrong while saving your data.', timestamp: Date.now() }, data: null });
-                    return;
-                }
-                else {
-                    res.status(201).json({ error: null, data: fakr });
-                }
-                
-            })
+            else {
+                res.status(200).json({ error: null, data: result.insertedCount + " values inserted" });
+            }
         });
+
     }
 }).put(function (req, res, next) {
     var reps = parseInt(req.body.reps) || 1;
@@ -128,8 +121,8 @@ router.route('/fakes').get(function (req, res) {
         res.status(500).json({ error: { message: 'Mercy ! Our servers cannot tolerate blank data.', timestamp: Date.now() }, data: null });
         return;
     }
-    else if (reps < 1 || reps > 500) {
-        res.status(500).json({ error: { message: 'Sorry ! Our servers currently only allow a max of 500 repititions.', timestamp: Date.now() }, data: null });
+    else if (reps < 1 || reps > 100000) {
+        res.status(500).json({ error: { message: 'Sorry ! Our servers currently only allow a maximum of 100,000 repititions.', timestamp: Date.now() }, data: null });
         return;
     }
     else {
@@ -140,36 +133,16 @@ router.route('/fakes').get(function (req, res) {
             res.status(500).json({ error: { message: 'Hey ! Seems like the ID you sent was invalid.', timestamp: Date.now() }, data: null });
             return;
         }
-        jBloat({ reps: reps, json: json }, function (err, data) {
+        
+        jBloat.Update({ reps: reps, json: json, name: name, uid: uid }, function (err, result) {
             if (err) {
-                console.error(err);
-                return;
+                console.log(err)
             }
-            var query = { unique_id: uid };
-            
-            var update = {
-                timestamp: Date.now(),
-                data : data,
-                type_details: req.body.json,
-                name : name
-            };
-            
-            var options = {
-                new : true
-            };
-            
-            Fakr.findOneAndUpdate(query, update, options, function (err, x , r) {
-                if (err) {
-                    console.error(err);
-                    res.status(500).json({ error: { message: 'Hey ! Seems like the ID you sent was invalid.', timestamp: Date.now() }, data: null });
-                    return;
-                }
-                res.status(200).json({ error: null, data: r.value });
-                return;
-            });
+            else {
+                res.status(200).json({ error: null, data: result });
+            }
         });
     }
-
 });
 
 module.exports = router;
