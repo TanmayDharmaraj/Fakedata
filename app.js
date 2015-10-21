@@ -62,8 +62,8 @@ app.on('error', function (e) {
 });
 
 app.on('uncaughtException', function () {
-    server.close();
+    app.close();
 });
 app.on('SIGTERM', function () { 
-    server.close();
+    app.close();
 })
