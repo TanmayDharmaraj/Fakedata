@@ -1,0 +1,40 @@
+﻿.container
+    .row#banner
+        .starter-template
+            h1 Create Awesome { Fake : "Data" }
+            p.lead Because developers need pampering. #[span(style="font-family: 'Nothing You Could Do', cursive;") Always!]
+            a(class="btn btn-primary btn-outline" id="btnEditPreviousJSON" ng-click="main.toggle()") Edit Previous JSON
+            .heightFix(style="height:1em;margin:2em")
+                #edit_fakr.row.text-center.margin-top-15(ng-show="main.isEditPreviousJsonClicked")
+                    .col-xs-5.col-xs-offset-3
+                        input(type="text" id="fakr_url" class="form-control" placeholder="Your fakr URL or ID")
+                    .pull-left  
+                        button(type="button" class="btn btn-success btn-outline" ng-click="main.GetFake()") Get Fake
+    #workspace
+        .row  
+            .col-sm-12.col-md-6.working-area#JsonInput.JsonKeyValues.text-center
+                form.form-inline(novalidate)
+                    ul(class="list-unstyled")
+                        li(ng-repeat="jkv in main.JsonKeyValues")
+                            .form-group
+                                label.sr-only Json key
+                                input(type="text" ng-model="jkv.Key" class="form-control" placeholder="Key" required)
+                            .form-group
+                                label.sr-only Data Type
+                                select(class="form-control" ng-model="jkv.DataType" ng-options="item.DataType for item in main.DataTypes | orderBy:'DataType'")
+                            .form-group
+                                button(type="button" class="btn btn-danger btn-outline " ng-click="main.DeleteJsonKeyValue($index)") Remove
+                    .form-group
+                        button(type="button" class="btn btn-default btn-outline"  ng-click="main.AddJsonKeyValue()") Add
+                        button(type="button" class="btn btn-default btn-outline" ng-click="main.GeneratePreview(main)") Preview
+            .col-sm-12.col-md-6.working-area#JsonOutput
+                pre
+        .row.margin-top-05.center-block
+            .col-sm-12.text-center
+                form(novalidate)
+                    .form-inline.form-group
+                        input(type="text" id="FakeName" class="form-control" placeholder="Call me some thing !" required ng-model="main.FakeName")
+                        input(type="number" id="Reps" class="form-control" placeholder="Repetitions" min="1" max="100000" required)
+                    .form-group
+                        button(type="button" class="btn btn-success" size="12px" id="FakeIt" ng-click="main.FakeIt()" ng-hide="main.isEditPreviousJsonClicked" ) Fake It!
+                        button(type="button" class="btn btn-success" id="FakeIt_Update" ng-click="main.UpdateFake()" ng-show="main.isEditPreviousJsonClicked") Update It!

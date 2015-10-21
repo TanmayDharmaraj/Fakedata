@@ -1,0 +1,111 @@
+body {
+  padding: 50px;
+  padding-bottom: 0px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+a {
+  color: #00b7ff;
+}
+.starter-template {
+  padding: 40px 15px;
+  text-align: center;
+}
+.navbar-custom {
+  background-color: #fff;
+  border-bottom: 2px solid #563d7c;
+}
+.navbar-custom .navbar-nav > li > a {
+  color: #000;
+}
+.navbar-custom .navbar-nav > .active > a,
+.navbar-nav > .active > a:hover,
+.navbar-nav > .active > a:focus {
+  color: #fff;
+  background-color: transparent;
+}
+.navbar-custom .navbar-brand {
+  color: #000;
+}
+.working-area,
+.working-area > textarea,
+.working-area > pre {
+  resize: vertical /* user can resize vertically, but width is fixed */;
+  height: 500px;
+  margin: 0px;
+}
+.btn-outline {
+  background-color: transparent;
+  color: inherit;
+  transition: all 0.5s;
+}
+.btn-primary.btn-outline {
+  border-color: #563d7c;
+  color: #563d7c;
+}
+.btn-primary.btn-outline:hover {
+  background-color: #563d7c;
+  color: #fff;
+}
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+/* Set the fixed height of the footer here */
+  height: 60px;
+}
+.JsonKeyValues div {
+  margin: 2px;
+}
+.form-group > * {
+  margin: 0.2em 0.2em !important;
+}
+pre outline:1px solid #ccc padding: 5px margin: 5px,
+.string {
+  color: #008000;
+}
+.number {
+  color: #ff8c00;
+}
+.boolean {
+  color: #00f;
+}
+.null {
+  color: #f0f;
+}
+.key {
+  color: #f00;
+}
+.margin-top-05 {
+  margin-top: 0.5em;
+}
+.margin-top-10 {
+  margin-top: 1em;
+}
+.margin-top-15 {
+  margin-top: 1.5em;
+}
+.margin-top-20 {
+  margin-top: 2em;
+}
+.margin-top-25 {
+  margin-top: 2.5em;
+}
+.margin-top-30 {
+  margin-top: 3em;
+}
+.colorgraph {
+  height: 7px;
+  border-top: 0;
+  background: #c4e17f;
+  border-radius: 5px;
+  background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+  background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+}
+input[type=number].form-control {
+  width: 8.5em;
+}
+button[type=button] {
+  width: 7em;
+}
