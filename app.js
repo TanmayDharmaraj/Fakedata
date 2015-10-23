@@ -7,8 +7,8 @@ var favicon = require('serve-favicon');
 var responseTime = require('response-time');
 
 var mongoose = require('mongoose');
+
 mongoose.connect(process.env.MONGODB, function (err) {
-mongoose.connect("mongodb://localhost:27017/fakedata", function (err) {
     if (err) {
         console.log(err);
     }
