@@ -5,9 +5,12 @@
         request.success(function (d) {
             if (d) {
                 //reset workspace to base view
+                var arr = new Array();
                 var response = d.data;
-                var json = response.data
-                self.user_json_data = FakeData.Helper.SyntaxHiglight(JSON.stringify(json, undefined, 4));
+                response.map(function(element){
+                    arr.push(element.data);
+                })
+                self.user_json_data = FakeData.Helper.SyntaxHiglight(JSON.stringify(arr, undefined, 4));
             }
         });
         request.error(function (err) {

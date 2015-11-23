@@ -7,10 +7,8 @@
             $.each(data, function (key, value) {
                 self.Fakes.push({
                     name: value.name,
-                    unique_id : value.unique_id,
-                    timestamp : value.timestamp,
                     type_details : value.type_details,
-                    data: JSON.stringify(value.data[0],undefined,4)
+                    data: JSON.stringify(value.data,undefined,4)
                 });
             });
         })

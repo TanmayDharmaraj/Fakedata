@@ -19,6 +19,7 @@ var jBloat = (function () {
                 callback(err);
             }
             else {
+                console.log(data);
                 callback(null, data);
             }
         });
@@ -35,7 +36,7 @@ var jBloat = (function () {
             
             for (var i = 0; i < reps; i++) {
                 var fakr = {};
-                fakr.data = RandomizeObject(json);
+                fakr.data = p_RandomizeObject(json);
                 fakr.type_details = json;
                 fakr.name = name;
                 myArray.push(fakr);
@@ -70,7 +71,7 @@ var jBloat = (function () {
             }
             else {
                 for (var i = 0; i < reps; i++) {
-                    myArray.push(RandomizeObject(json));
+                    myArray.push(p_RandomizeObject(json));
                 }
                 for (var i = 0; i < data.length; i++) {
                     bulk.find({ _id: data[i]._id }).updateOne({ $set: { data: myArray[i], type_details: json, name: name } });

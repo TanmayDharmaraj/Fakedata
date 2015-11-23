@@ -41,17 +41,24 @@
             });
             request.success(function (d) {
                 if (d.data) {
-                    var url = location.href + "api/v1/fakes/" + d.data.unique_id
-                    /*$("#workspace .row").removeClass("show").addClass("hide");
+                    toastr.success(d.data);
+                   /* var url = location.href + "api/v1/fakes/" + d.data.unique_id
+                    $("#workspace .row").removeClass("show").addClass("hide");
                     $("#workspace").append("<div id='link_output'><p class='lead text-center'><a href=" + url + ">" + url + "</a></p></div>");*/
                 }
                 else {
-                    toastr.error('You probably sent blank data which resulted in the server rejecting your request.', 'Oops! :-(');
+                    toastr.error('You probably sent blank data which resulted in the server rejecting your request.', 'Mercy !');
                 }
             });
-            request.error(function (err) {
-                toastr.error('We messed up! Be good and let us know.', 'Oops! :-(')
-                console.log(err)
+            request.error(function (err,status) {
+                if(status == 403){
+                    toastr.error(err.error.message,'Hey!');
+                    console.log(err,status);
+                }
+                else{
+                    toastr.error('You tried something that we didn\'t expect', 'That\'s embarassing!')
+                    console.log(err,status)    
+                }
             });
         };
         self.UpdateFake = function () {
@@ -62,7 +69,7 @@
             d.url = $("#fakr_url").val();
             
             if ($.isEmptyObject(d.json)) {
-                toastr.warning('Our servers cannot tolerate blank data.', 'Mercy !');
+                toastr.warning('You probably sent blank data which resulted in the server rejecting your request.', 'Mercy !');
                 return
             }
             else {
@@ -78,7 +85,7 @@
                         toastr.success("Your data has been updated successfully", "Awesome !");
                     }
                     else {
-                        toastr.error('You probably sent blank data which resulted in the server rejecting your request.', 'Oops! :-(');
+                        toastr.error('You probably sent blank data which resulted in the server rejecting your request.', 'Mercy !');
                     }
                 });
                 request.error(function (err) {

@@ -24,24 +24,20 @@ function responder(res) {
 };
 
 //A special route for shorter URLs
-router.get('/fakes/:id', function (req, res) {
-    var cacheKey = req.params.id;
+router.get('/fakes/:name', function (req, res) {
+    var cacheKey = req.params.name;
+    cacheKey = cacheKey.toLowerCase();
     var details = req.query.details ? true : false;
     
-    
-    if (!nanoId.verify(cacheKey)) {
-        res.status(500).json({ error: { message: 'Hey ! Seems like the ID you sent was invalid.', timestamp: Date.now() }, data: null });
-        return;
-    }
     memoryCache.wrap(cacheKey + "_" + details, function (cacheCallback) {
         var selectFields = "";
         if (details)
-            selectFields = "unique_id data type_details name timestamp -_id";
+            selectFields = "data type_details name -_id";
         else
-            selectFields = "unique_id data name -_id";
+            selectFields = "data name -_id";
 
         var options = {
-            query : { unique_id: cacheKey },
+            query : { name: cacheKey },
             projection : selectFields
         }
 
@@ -56,40 +52,50 @@ router.get('/fakes/:id', function (req, res) {
             else {
                 cacheCallback(null, data);
             }
-        
         })
        
     }, { ttl: 20 }, responder(res));
 });
 
 router.route('/fakes').get(function (req, res) {
+   
     var details = req.query.details ? true : false;
     var selectFields = "";
     if (details)
-        selectFields = "unique_id data type_details timestamp name -_id";
+        selectFields = "data type_details name -_id";
     else
-        selectFields = "unique_id data name -_id";
+        selectFields = "data name -_id";
     
     memoryCache.wrap("allfakes_" + details, function (cacheCallback) {
-        Fakr.find({}, selectFields, function (err, fakrs) {
+        Fakr.aggregate([
+            { $group:{
+                    _id: "$name",
+                    name: {$first: "$name"},
+                    data: {$first: "$data"},
+                    type_details: {$first: "$type_details"}
+                }
+            },
+            { $project: { _id: 0, type_details: 1, name:1, data: 1 } }
+        ],function(err, fakrs){
             if (err) {
-                console.error(err);
+                console.error(err); 
                 cacheCallback(err);
             }
             else {
-                if (!fakrs)
+                if (!fakrs){
                     cacheCallback(null, "No data returned")
-                else
-                    cacheCallback(null, fakrs);
-            }
-            
-        });
-            
+                }
+                else{
+                    cacheCallback(null,fakrs)
+                }  
+            }       
+        });    
     }, responder(res));
 }).post(function (req, res) {
     
     var reps = parseInt(req.body.reps) || 1;
     var name = req.body.name || "";
+    name = name.toLowerCase();
     var json = req.body.json;
     if (common.Helper.isEmpty(json)) {
         res.status(500).json({ error: { message: 'Mercy ! Our servers cannot tolerate blank data.', timestamp: Date.now() }, data: null });
@@ -100,16 +106,33 @@ router.route('/fakes').get(function (req, res) {
         return;
     }
     else {
-        var start = new Date().getTime();
-        jBloat.New({ reps: reps, json: json, name: name }, function (err, data) {
-            if (err) {
-                console.error(err);
-            }
-            else {
-                res.status(200).json({ error: null, data: result.insertedCount + " values inserted" });
-            }
-        });
+        var selectFields = "data name -_id";
 
+        var options = {
+            query : { name: name },
+            projection : selectFields
+        }
+
+        jBloat.Get(options,function(err, result){
+            if(err){
+                console.error(err);
+                res.status(500).json({error:{message: 'Something went wrong.',timestamp: Date.now() }, data: null })
+            }
+            if(common.Helper.isEmpty(result)){
+                jBloat.New({ reps: reps, json: json, name: name }, function (err, result) {
+                    if (err) {
+                        console.error(err);
+                        res.status(500).json({error:{message: 'Something went wrong.',timestamp: Date.now() }, data: null })
+                    }
+                    else {
+                        res.status(200).json({ error: null, data: result.insertedCount + " values inserted",result: result });
+                    }
+                });        
+            }
+            else{
+                res.status(403).json({error: {message:'A resource with the same already exists. Please use a different name.',timestamp:Date.now()},data:result})
+            }       
+        });
     }
 }).put(function (req, res, next) {
     var reps = parseInt(req.body.reps) || 1;

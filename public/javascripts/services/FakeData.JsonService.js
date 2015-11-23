@@ -1,5 +1,5 @@
 ﻿var FakeData = FakeData || {};
-FakeData.JsonService = (function ($) {
+FakeData.JsonService = (function () {
     
     var MakeJSON = function (data, options) {
         var dt = options.DataType == true ? true : false;
