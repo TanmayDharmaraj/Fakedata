@@ -19,11 +19,18 @@ var jBloat = (function () {
                 callback(err);
             }
             else {
-                console.log(data);
-                callback(null, data);
+                var arr = new Array();
+                data.map(function(element){
+                    arr.push(element.data);
+                });
+                var response = {};
+                response.data =arr;
+                response.name = data[0].name;
+                response.type_details = data[0].type_details;
+                response.reps = data.length;
+                callback(null, response);
             }
         });
-    
     };
     
     var _New = function (args, callback) {
@@ -60,33 +67,23 @@ var jBloat = (function () {
         var json = args.json || null;
         var reps = args.reps || 0;
         var name = args.name || "";
-        var uid = args.uid || "";
-        
-        var bulk = Fakr.collection.initializeOrderedBulkOp();
-        
-        var myArray = new Array();
-        Fakr.find({ unique_id: uid }).lean().exec(function (err, data) {
-            if (err) {
-                callback(err);
-            }
-            else {
-                for (var i = 0; i < reps; i++) {
-                    myArray.push(p_RandomizeObject(json));
-                }
-                for (var i = 0; i < data.length; i++) {
-                    bulk.find({ _id: data[i]._id }).updateOne({ $set: { data: myArray[i], type_details: json, name: name } });
-                }
                 
-                bulk.execute(function (err, data) {
-                    if (err) {
+        var myArray = new Array();
+        Fakr.remove({ name: name },function(err, result){
+            if(err){
+                callback(err)
+            }
+            else{
+                _New(args,function(err, data){
+                    if(err){
                         callback(err)
                     }
-                    else {
+                    else{
                         callback(null, data);
                     }
-                });
+                })
             }
-        });
+        })
     };
     
     return {

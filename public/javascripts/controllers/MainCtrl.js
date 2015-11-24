@@ -3,7 +3,8 @@
         self.DataTypes = [];
         self.isEditPreviousJsonClicked = false;
         self.FakeName = "";
-
+        self.Reps = null;
+        
         self.toggle = function () {
             
             this.isEditPreviousJsonClicked = !this.isEditPreviousJsonClicked;
@@ -28,8 +29,8 @@
         self.FakeIt = function () {
             var d = {};
             d.json = FakeData.JsonService.MakeJSON(self.JsonKeyValues, { DataType: true });
-            d.reps = document.getElementById("Reps").value;
-            d.name = document.getElementById("FakeName").value;
+            d.reps = self.Reps;
+            d.name = self.FakeName;
             if ($.isEmptyObject(d.json)) {
                 toastr.warning('Our servers cannot tolerate blank data.', 'Mercy !');
                 return
@@ -64,8 +65,8 @@
         self.UpdateFake = function () {
             var d = {};
             d.json = FakeData.JsonService.MakeJSON(self.JsonKeyValues, { DataType: true });
-            d.name = document.getElementById("FakeName").value;
-            d.reps = document.getElementById("Reps").value;
+            d.name = self.FakeName;
+            d.reps = self.Reps;
             d.url = $("#fakr_url").val();
             
             if ($.isEmptyObject(d.json)) {
@@ -107,9 +108,10 @@
                     //reset workspace to base view
                     $("#workspace>#link_output").remove();
                     $("#workspace .row").removeClass("hide").addClass("show");
-
-                    self.FakeName = d.data.name
-                    var data = d.data.type_details[0];
+                    
+                    self.FakeName = d.data.name;
+                    self.Reps = d.data.reps;
+                    var data = d.data.type_details;
                     self.JsonKeyValues = [];
                     $.each(data, function (key, value) {                 
                         var length = self.DataTypes.length;

@@ -28,7 +28,7 @@ router.get('/fakes/:name', function (req, res) {
     var cacheKey = req.params.name;
     cacheKey = cacheKey.toLowerCase();
     var details = req.query.details ? true : false;
-    
+
     memoryCache.wrap(cacheKey + "_" + details, function (cacheCallback) {
         var selectFields = "";
         if (details)
@@ -149,15 +149,7 @@ router.route('/fakes').get(function (req, res) {
         return;
     }
     else {
-        var arr_uid = url.split('/');
-        var uid = arr_uid[arr_uid.length - 1];
-        
-        if (!nanoId.verify(uid)) {
-            res.status(500).json({ error: { message: 'Hey ! Seems like the ID you sent was invalid.', timestamp: Date.now() }, data: null });
-            return;
-        }
-        
-        jBloat.Update({ reps: reps, json: json, name: name, uid: uid }, function (err, result) {
+        jBloat.Update({ reps: reps, json: json, name: name }, function (err, result) {
             if (err) {
                 console.log(err)
             }

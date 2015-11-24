@@ -34,7 +34,7 @@
                 form(novalidate)
                     .form-inline.form-group
                         input(type="text" id="FakeName" class="form-control" placeholder="Call me some thing !" required ng-model="main.FakeName")
-                        input(type="number" id="Reps" class="form-control" placeholder="Repetitions" min="1" max="100000" required)
+                        input(type="number" id="Reps" class="form-control" placeholder="Repetitions" min="1" max="100000" required ng-model="main.Reps")
                     .form-group
                         button(type="button" class="btn btn-success" size="12px" id="FakeIt" ng-click="main.FakeIt()" ng-hide="main.isEditPreviousJsonClicked" ) Fake It!
                         button(type="button" class="btn btn-success" id="FakeIt_Update" ng-click="main.UpdateFake()" ng-show="main.isEditPreviousJsonClicked") Update It!
