@@ -1,6 +1,5 @@
 ﻿var common = require('../public/javascripts/services/FakeData.CommonHelper');
 var Fakr = require('../models/fakr');
-var nonoID = require('nano-id');
 
 var jBloat = (function () {
     
@@ -19,16 +18,21 @@ var jBloat = (function () {
                 callback(err);
             }
             else {
-                var arr = new Array();
-                data.map(function(element){
-                    arr.push(element.data);
-                });
-                var response = {};
-                response.data =arr;
-                response.name = data[0].name;
-                response.type_details = data[0].type_details;
-                response.reps = data.length;
-                callback(null, response);
+                if(common.Helper.isEmpty(data)){
+                     callback(null, data);
+                }
+                else{
+                    var arr = new Array();
+                    data.map(function(element){
+                        arr.push(element.data);
+                    });
+                    var response = {};
+                    response.data =arr;
+                    response.name = data[0].name;
+                    response.type_details = data[0].type_details;
+                    response.reps = data.length;
+                    callback(null, response);                       
+                }
             }
         });
     };
@@ -64,11 +68,9 @@ var jBloat = (function () {
     };
     
     var _Update = function (args, callback) {
-        var json = args.json || null;
-        var reps = args.reps || 0;
+        args.reps = args.reps || 1;
         var name = args.name || "";
-                
-        var myArray = new Array();
+        
         Fakr.remove({ name: name },function(err, result){
             if(err){
                 callback(err)

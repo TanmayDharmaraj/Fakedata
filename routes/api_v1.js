@@ -1,12 +1,9 @@
 ﻿var express = require('express');
 var jBloat = require('../node_services/jBloat.js');
-var nanoId = require('nano-id');
 var common = require('../public/javascripts/services/FakeData.CommonHelper');
 var cacheManager = require('cache-manager');
 var memoryCache = cacheManager.caching({ store: 'memory', max: 100, ttl: 10/*seconds*/ });
-//Schema
 var Fakr = require('../models/fakr');
-
 var router = express.Router();
 
 //abstracted responder for cached requests
@@ -15,8 +12,7 @@ function responder(res) {
         if (err) {
             var status = err.status || 500
             console.error(err);
-            res.status(status).json({ error: { message: "Something went wrong.", timestamp: Date.now() }, data: null });
-
+            res.status(status).json({ error: { message: "Something went wrong.", timestamp: Date.now(), info: err }, data: data });
         } else {
             res.status(200).json({ error: null, data: data })
         }
@@ -43,11 +39,11 @@ router.get('/fakes/:name', function (req, res) {
 
         jBloat.Get(options, function (err, data) {
             if (err) {
-                console.error(err)
                 cacheCallback(err);
             }
-            else if (!data) {
-                cacheCallback(null, "No data returned")
+            else if (common.Helper.isEmpty(data)) {
+                
+                cacheCallback({ status: 500, message: "No data returned" }, null)
             }
             else {
                 cacheCallback(null, data);
@@ -78,12 +74,11 @@ router.route('/fakes').get(function (req, res) {
             { $project: { _id: 0, type_details: 1, name:1, data: 1 } }
         ],function(err, fakrs){
             if (err) {
-                console.error(err); 
                 cacheCallback(err);
             }
             else {
-                if (!fakrs){
-                    cacheCallback(null, "No data returned")
+                if (common.Helper.isEmpty(fakrs)){
+                    cacheCallback({ status: 500, message: "No data returned" }, null)
                 }
                 else{
                     cacheCallback(null,fakrs)
@@ -91,18 +86,23 @@ router.route('/fakes').get(function (req, res) {
             }       
         });    
     }, responder(res));
-}).post(function (req, res) {
-    
-    var reps = parseInt(req.body.reps) || 1;
+}).post(function (req, res) {    
+    var reps = parseInt(req.body.reps) || null;
+    if(reps == null){
+        var resp = responder(res);
+        resp({ status: 403, message: 'Invalid Repititions' },null);
+    }
     var name = req.body.name || "";
     name = name.toLowerCase();
     var json = req.body.json;
     if (common.Helper.isEmpty(json)) {
-        res.status(500).json({ error: { message: 'Mercy ! Our servers cannot tolerate blank data.', timestamp: Date.now() }, data: null });
+        var resp = responder(res);
+        resp({ status: 500, message: 'Mercy ! Our servers cannot tolerate blank data.' }, null);
         return;
     }
     else if (reps < 1 || reps > 100000) {
-        res.status(500).json({ error: { message: 'Sorry ! Our servers currently only allow a maximum of 100,000 repititions.', timestamp: Date.now() }, data: null });
+        var resp = responder(res);
+        resp({ status: 500, message: 'Sorry ! Our servers currently only allow a maximum of 100,000 repititions.' },null);
         return;
     }
     else {
@@ -115,22 +115,24 @@ router.route('/fakes').get(function (req, res) {
 
         jBloat.Get(options,function(err, result){
             if(err){
-                console.error(err);
-                res.status(500).json({error:{message: 'Something went wrong.',timestamp: Date.now() }, data: null })
+                var resp = responder(res);
+                resp({status:500,message:'Unknown Error'}, null);
             }
             if(common.Helper.isEmpty(result)){
                 jBloat.New({ reps: reps, json: json, name: name }, function (err, result) {
                     if (err) {
-                        console.error(err);
-                        res.status(500).json({error:{message: 'Something went wrong.',timestamp: Date.now() }, data: null })
+                        var resp = responder(res);
+                        resp({status:500,message:'Unknown Error'}, null);
                     }
                     else {
-                        res.status(200).json({ error: null, data: result.insertedCount + " values inserted",result: result });
+                        var resp = responder(res);
+                        resp(null, {insertedCount : result.insertedCount});
                     }
                 });        
             }
             else{
-                res.status(403).json({error: {message:'A resource with the same already exists. Please use a different name.',timestamp:Date.now()},data:result})
+                var resp = responder(res);
+                resp({status:403,message:'A resource with the same already exists. Please use a different name.'}, result );
             }       
         });
     }
@@ -141,20 +143,24 @@ router.route('/fakes').get(function (req, res) {
     var name = req.body.name || "";
     
     if (!url || !reps || common.Helper.isEmpty(json)) {
-        res.status(500).json({ error: { message: 'Mercy ! Our servers cannot tolerate blank data.', timestamp: Date.now() }, data: null });
+        var resp = responder(res);
+        resp({status:500,message:'Mercy ! Our servers cannot tolerate blank data.'}, null);
         return;
     }
     else if (reps < 1 || reps > 100000) {
-        res.status(500).json({ error: { message: 'Sorry ! Our servers currently only allow a maximum of 100,000 repititions.', timestamp: Date.now() }, data: null });
+        var resp = responder(res);
+        resp({status:500,message:'Sorry ! Our servers currently only allow a maximum of 100,000 repititions.'}, null);
         return;
     }
     else {
         jBloat.Update({ reps: reps, json: json, name: name }, function (err, result) {
             if (err) {
-                console.log(err)
+                var resp = responder(res);
+                resp({status:500,message: "Unknown Error"}, null);
             }
             else {
-                res.status(200).json({ error: null, data: result });
+                var resp = responder(res);
+                resp(null, {insertedCount : result.insertedCount});
             }
         });
     }

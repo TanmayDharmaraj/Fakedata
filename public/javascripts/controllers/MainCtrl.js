@@ -41,8 +41,8 @@
                 data: d
             });
             request.success(function (d) {
-                if (d.data) {
-                    toastr.success(d.data);
+                if (d.error == null) {
+                    toastr.success("Record created successfully","Awesome!");
                    /* var url = location.href + "api/v1/fakes/" + d.data.unique_id
                     $("#workspace .row").removeClass("show").addClass("hide");
                     $("#workspace").append("<div id='link_output'><p class='lead text-center'><a href=" + url + ">" + url + "</a></p></div>");*/
@@ -81,7 +81,6 @@
                 });
                 
                 request.success(function (d) {
-                    console.log(d)
                     if (d.data) {
                         toastr.success("Your data has been updated successfully", "Awesome !");
                     }
