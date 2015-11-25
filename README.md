@@ -10,12 +10,11 @@ A web application that helps developers build fake JSON data quickly and easily.
 * [MongoDB](https://www.mongodb.org/)
 * [Mongoose](http://mongoosejs.com/)
 * [ChanceJS](http://chancejs.com/)
-* [Nano-ID](https://github.com/rkivalin/nano-id)
 * [Q](https://github.com/kriskowal/q)
 * [Winston](https://github.com/winstonjs/winston)
 * [Cache-Manager](https://www.npmjs.com/package/cache-manager)
 
-ToDos
+ToDo
 ----
 * Support composite objects for creating JSON
 * ~~Add support to generate random image urls~~
@@ -28,10 +27,6 @@ Installation
 * Install dependencies using node
 * Install nodemon, seriously, save yourself the hassel.
 * Then do `nodemon`. You should see express working on its magic. 
-
-Documentation
----
-Coming soon...
 
 License
 ----
