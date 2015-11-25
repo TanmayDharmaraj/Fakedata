@@ -8,11 +8,18 @@ var responseTime = require('response-time');
 
 var mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGODB || "mongodb://localhost:27017/fakedata", function (err) {
+/*mongoose.connect(process.env.MONGODB || "mongodb://localhost:27017/fakedata", function (err) {
+    if (err) {
+        console.log(err);
+    }
+});*/
+
+mongoose.connect(process.env.MONGODB || "mongodb://dbuser:mN722P49stSuD33F@ds043324.mongolab.com:43324/fakedata", function (err) {
     if (err) {
         console.log(err);
     }
 });
+
 
 var app = express();
 var db = mongoose.connection;

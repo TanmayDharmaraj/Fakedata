@@ -11,6 +11,10 @@
                     data: JSON.stringify(value.data,undefined,4)
                 });
             });
+        }).error(function(err){
+            console.log(err);
+            toastr.error("Something went wrong");
+                        
         })
 
     }]);
