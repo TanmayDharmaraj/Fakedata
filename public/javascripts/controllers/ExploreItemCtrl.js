@@ -1,6 +1,7 @@
 ﻿angular.module('ExploreItemCtrl', []).controller('ExploreItemController', ['$scope', '$http', '$routeParams', function ($scope, $http, $routeParams) {
         var self = this;
         self.user_json_data = "";
+        self.url = location.origin + "/api/v1/fakes/"+$routeParams.id;
         var request = $http.get('/api/v1/fakes/' + $routeParams.id);
         request.success(function (result) {
             if (result) {
